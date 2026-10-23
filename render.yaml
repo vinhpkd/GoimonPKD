@@ -1,0 +1,9 @@
+services:
+  - type: web
+    name: dat-mon-chung
+    runtime: node
+    plan: free
+    region: singapore
+    buildCommand: "true"
+    startCommand: node server.js
+    healthCheckPath: /api/health

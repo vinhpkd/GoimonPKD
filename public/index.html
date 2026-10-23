@@ -1,0 +1,636 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Đặt Món Chung</title>
+<meta name="description" content="Dán link quán ShopeeFood, cả nhóm cùng chọn món trên một trang.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%23ee4d2d'/%3E%3Ctext x='16' y='22' font-size='17' text-anchor='middle' fill='white' font-family='sans-serif' font-weight='700'%3EĐ%3C/text%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700&display=swap">
+<style>
+:root {
+  --bg: #f5f5f5; --surface: #ffffff; --sunk: #f0f0f0; --ink: #222222; --muted: #6b6b6b; --line: #e6e6e6;
+  --accent: #ee4d2d; --accent-ink: #ffffff; --accent-soft: #fff1ed; --accent-text: #c63a1d;
+  --mine: #fff4d6; --mine-ink: #6b4a00; --ok: #1f8a4c; --danger: #c62828; --flash: #fff0c2;
+  --f-body: "Be Vietnam Pro", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  --radius: 10px; --shadow: 0 1px 2px rgba(0,0,0,.06);
+}
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
+  --bg: #141414; --surface: #1e1e1e; --sunk: #2a2a2a; --ink: #ededed; --muted: #a3a3a3; --line: #333333;
+  --accent: #ff6a45; --accent-ink: #1a0a05; --accent-soft: #3a1f17; --accent-text: #ff8a6a;
+  --mine: #3b3214; --mine-ink: #f3d98a; --ok: #5cc285; --danger: #ff7a70; --flash: #4a3d12; color-scheme: dark } }
+:root[data-theme="dark"] {
+  --bg: #141414; --surface: #1e1e1e; --sunk: #2a2a2a; --ink: #ededed; --muted: #a3a3a3; --line: #333333;
+  --accent: #ff6a45; --accent-ink: #1a0a05; --accent-soft: #3a1f17; --accent-text: #ff8a6a;
+  --mine: #3b3214; --mine-ink: #f3d98a; --ok: #5cc285; --danger: #ff7a70; --flash: #4a3d12; color-scheme: dark }
+
+* { box-sizing: border-box; }
+html { scroll-padding-top: 130px; }
+body { margin: 0; background: var(--bg); color: var(--ink); font-family: var(--f-body); font-size: 15px; line-height: 1.45; -webkit-font-smoothing: antialiased; }
+h1, h2, h3 { margin: 0; line-height: 1.25; text-wrap: balance; }
+button, input, textarea { font: inherit; color: inherit; }
+button { cursor: pointer; }
+a { color: var(--accent-text); }
+.num { font-variant-numeric: tabular-nums; }
+.muted { color: var(--muted); }
+[hidden] { display: none !important; }
+:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+
+input[type=text], input[type=url], input[type=search], textarea {
+  width: 100%; border: 1px solid var(--line); background: var(--surface); border-radius: 8px; padding: 10px 12px; min-height: 42px; }
+input:focus, textarea:focus { outline: none; border-color: var(--accent); box-shadow: 0 0 0 3px var(--accent-soft); }
+.btn { border: 0; background: var(--accent); color: var(--accent-ink); font-weight: 600; border-radius: 8px; padding: 10px 16px; min-height: 42px; white-space: nowrap; }
+.btn:disabled { opacity: .55; cursor: default; }
+.btn.ghost { background: transparent; color: var(--ink); border: 1px solid var(--line); }
+.btn.small { min-height: 34px; padding: 6px 12px; font-size: 14px; }
+.btn.danger { background: var(--danger); color: #fff; }
+.linkbtn { border: 0; background: none; padding: 4px 0; color: var(--muted); text-decoration: underline; text-underline-offset: 3px; font-size: 14px; }
+.linkbtn:hover { color: var(--ink); }
+
+/* ---------- top ---------- */
+header.top { background: var(--accent); color: #fff; }
+.top .in { max-width: 1240px; margin: 0 auto; padding: 12px 16px; display: flex; gap: 12px; align-items: center; justify-content: space-between; flex-wrap: wrap; }
+.brand { display: flex; align-items: center; gap: 10px; font-weight: 700; font-size: 19px; }
+.brand .logo { width: 32px; height: 32px; border-radius: 8px; background: #fff; color: var(--accent); display: grid; place-items: center; font-weight: 700; }
+.me { display: flex; align-items: center; gap: 8px; background: rgba(255,255,255,.16); border-radius: 999px; padding: 4px 4px 4px 14px; }
+.me label { font-size: 14px; white-space: nowrap; }
+.me input { border: 0; border-radius: 999px; min-height: 34px; width: 170px; padding: 6px 12px; background: #fff; color: #222; }
+
+.wrap { max-width: 1240px; margin: 0 auto; padding: 0 16px; }
+.addbar { background: var(--surface); border-bottom: 1px solid var(--line); }
+.addbar form { display: flex; gap: 8px; padding: 12px 0 4px; }
+.addbar form input { flex: 1; }
+.status { font-size: 14px; min-height: 8px; padding: 2px 0 10px; color: var(--muted); }
+.status.err { color: var(--danger); }
+.status.ok { color: var(--ok); }
+.fallback { border: 1px dashed var(--line); border-radius: var(--radius); padding: 12px 14px; margin: 0 0 12px; font-size: 14px; }
+.fallback ol { margin: 6px 0 0; padding-left: 20px; display: grid; gap: 8px; }
+.fallback textarea { min-height: 70px; font-size: 12px; font-family: ui-monospace, Menlo, Consolas, monospace; }
+
+.tabs { display: flex; gap: 8px; overflow-x: auto; padding: 12px 0; scrollbar-width: thin; }
+.tab { flex: none; border: 1px solid var(--line); background: var(--surface); border-radius: 999px; padding: 7px 14px; font-size: 14px; display: flex; gap: 6px; align-items: center; max-width: 280px; }
+.tab span.n { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.tab[aria-pressed="true"] { border-color: var(--accent); color: var(--accent-text); background: var(--accent-soft); font-weight: 600; }
+.tab .badge { background: var(--accent); color: var(--accent-ink); border-radius: 999px; font-size: 12px; padding: 0 7px; font-weight: 600; }
+
+/* ---------- shop ---------- */
+.shop { background: var(--surface); border-radius: var(--radius); box-shadow: var(--shadow); padding: 14px; display: flex; gap: 14px; align-items: flex-start; }
+.shop img { width: 88px; height: 88px; border-radius: 8px; object-fit: cover; flex: none; background: var(--sunk); }
+.shop h2 { font-size: 21px; }
+.shop .meta { display: flex; gap: 14px; flex-wrap: wrap; align-items: center; margin-top: 6px; font-size: 14px; }
+
+.grid { display: grid; grid-template-columns: 200px minmax(0, 1fr) 360px; gap: 16px; align-items: start; margin: 16px 0 90px; }
+.catnav { position: sticky; top: 12px; background: var(--surface); border-radius: var(--radius); box-shadow: var(--shadow); padding: 8px 0; max-height: calc(100vh - 24px); overflow: auto; }
+.catnav a { display: block; padding: 7px 14px; color: var(--ink); text-decoration: none; font-size: 14px; border-left: 3px solid transparent; }
+.catnav a:hover { color: var(--accent-text); }
+.catnav a.on { color: var(--accent-text); border-left-color: var(--accent); font-weight: 600; }
+
+.menu { background: var(--surface); border-radius: var(--radius); box-shadow: var(--shadow); min-height: 300px; }
+.searchbox { position: sticky; top: 0; z-index: 5; background: var(--surface); padding: 12px 14px; border-bottom: 1px solid var(--line); border-radius: var(--radius) var(--radius) 0 0; }
+.searchbox .field { position: relative; }
+.searchbox svg { position: absolute; left: 12px; top: 50%; transform: translateY(-50%); width: 17px; height: 17px; color: var(--ink); }
+.searchbox input { padding-left: 38px; }
+.searchbox .count { font-size: 13px; color: var(--muted); margin-top: 6px; }
+.catchips { display: none; gap: 6px; overflow-x: auto; margin-top: 8px; scrollbar-width: none; }
+.catchips a { flex: none; font-size: 13px; padding: 4px 10px; border-radius: 999px; background: var(--sunk); color: var(--ink); text-decoration: none; }
+
+.cat h3 { font-size: 13px; text-transform: uppercase; letter-spacing: .04em; color: var(--muted); padding: 16px 14px 6px; font-weight: 600; }
+.dish { display: grid; grid-template-columns: 72px minmax(0, 1fr) auto; gap: 12px; padding: 12px 14px; border-top: 1px solid var(--line); transition: background-color .6s; }
+.cat h3 + .dish { border-top: 0; }
+.dish.flash { background: var(--flash); transition: none; }
+.dish.off { opacity: .5; }
+.dish .ph { width: 72px; height: 72px; border-radius: 8px; object-fit: cover; background: var(--sunk); display: block; }
+.dish .nm { font-weight: 600; }
+.dish .ds { font-size: 13px; color: var(--muted); margin-top: 2px; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+.dish .who { display: flex; flex-wrap: wrap; gap: 4px; margin-top: 6px; }
+.chipwho { font-size: 12.5px; background: var(--accent-soft); color: var(--accent-text); border-radius: 999px; padding: 2px 9px; font-weight: 500; }
+.chipwho.mine { background: var(--mine); color: var(--mine-ink); }
+.side { display: flex; flex-direction: column; align-items: flex-end; justify-content: space-between; gap: 8px; min-width: 96px; }
+.price { font-weight: 600; text-align: right; }
+.price s { display: block; font-weight: 400; font-size: 12.5px; color: var(--muted); }
+.plus { width: 30px; height: 30px; border-radius: 6px; border: 0; background: var(--accent); color: var(--accent-ink); font-size: 20px; line-height: 1; display: grid; place-items: center; }
+.plus:disabled { background: var(--sunk); color: var(--muted); cursor: default; }
+.step { display: inline-flex; align-items: center; gap: 2px; }
+.step button { width: 30px; height: 30px; border-radius: 6px; border: 1px solid var(--accent); background: var(--surface); color: var(--accent-text); font-size: 18px; line-height: 1; display: grid; place-items: center; padding: 0; }
+.step button.add { background: var(--accent); color: var(--accent-ink); }
+.step b { min-width: 28px; text-align: center; }
+
+.picker { grid-column: 1 / -1; background: var(--sunk); border-radius: 8px; padding: 12px; display: grid; gap: 10px; }
+.picker fieldset { border: 0; padding: 0; margin: 0; }
+.picker legend { font-weight: 600; font-size: 14px; padding: 0 0 4px; }
+.picker .opts { display: flex; flex-wrap: wrap; gap: 6px; }
+.picker label.opt { display: flex; gap: 6px; align-items: center; background: var(--surface); border: 1px solid var(--line); border-radius: 8px; padding: 6px 10px; font-size: 14px; cursor: pointer; }
+.picker label.opt:has(input:checked) { border-color: var(--accent); background: var(--accent-soft); }
+.picker .line { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; justify-content: space-between; }
+.picker .err { color: var(--danger); font-size: 14px; }
+
+.empty { padding: 40px 20px; text-align: center; }
+.empty h2 { font-size: 20px; margin-bottom: 6px; }
+
+/* ---------- board ---------- */
+.board { position: sticky; top: 12px; background: var(--surface); border-radius: var(--radius); box-shadow: var(--shadow); max-height: calc(100vh - 24px); overflow: auto; }
+.board .hd { padding: 14px; border-bottom: 1px solid var(--line); display: flex; justify-content: space-between; align-items: baseline; gap: 8px; }
+.board .hd h2 { font-size: 17px; }
+.live { font-size: 12px; color: var(--ok); display: inline-flex; gap: 5px; align-items: center; }
+.live::before { content: ""; width: 7px; height: 7px; border-radius: 50%; background: currentColor; }
+.live.off { color: var(--danger); }
+.person { padding: 12px 14px; border-bottom: 1px solid var(--line); }
+.person.mine { background: color-mix(in srgb, var(--mine) 45%, transparent); }
+.pname { display: flex; justify-content: space-between; font-weight: 600; margin-bottom: 6px; gap: 8px; }
+.pl { display: grid; grid-template-columns: auto minmax(0, 1fr) auto; gap: 2px 8px; align-items: center; font-size: 14px; padding: 3px 0; }
+.pl .q { font-weight: 600; color: var(--accent-text); }
+.pl .sub { grid-column: 2 / -1; font-size: 12.5px; color: var(--muted); }
+.pl .step button { width: 24px; height: 24px; font-size: 15px; }
+.pl .step b { min-width: 20px; font-size: 14px; }
+.totals { padding: 14px; display: grid; gap: 4px; }
+.totals .big { display: flex; justify-content: space-between; font-size: 18px; font-weight: 700; }
+.agg { margin: 0 14px 14px; background: var(--sunk); border-radius: 8px; padding: 10px 12px; }
+.agg pre { margin: 8px 0 0; white-space: pre-wrap; font-family: inherit; font-size: 14px; }
+.foot { padding: 0 14px 14px; display: flex; gap: 8px; align-items: center; flex-wrap: wrap; font-size: 14px; }
+
+.mbar { display: none; }
+.toast { position: fixed; left: 50%; bottom: 24px; transform: translateX(-50%); background: #222; color: #fff; padding: 10px 16px; border-radius: 8px; font-size: 14px; z-index: 50; max-width: calc(100% - 32px); box-shadow: 0 4px 16px rgba(0,0,0,.25); }
+
+dialog { border: 0; border-radius: 12px; padding: 20px; width: min(380px, calc(100% - 32px)); background: var(--surface); color: var(--ink); }
+dialog::backdrop { background: rgba(0,0,0,.45); }
+dialog h2 { font-size: 18px; margin-bottom: 10px; }
+dialog form { display: grid; gap: 12px; }
+
+@media (max-width: 1100px) {
+  .grid { grid-template-columns: minmax(0, 1fr) 340px; }
+  .catnav { display: none; }
+  .catchips { display: flex; }
+}
+@media (max-width: 800px) {
+  .grid { grid-template-columns: minmax(0, 1fr); margin-bottom: 80px; }
+  .board { position: static; max-height: none; }
+  .me input { width: 130px; }
+  .shop img { width: 64px; height: 64px; }
+  .dish { grid-template-columns: 60px minmax(0, 1fr) auto; gap: 10px; }
+  .dish .ph { width: 60px; height: 60px; }
+  .mbar { display: flex; position: fixed; left: 0; right: 0; bottom: 0; z-index: 20; background: var(--accent); color: var(--accent-ink); padding: 12px 16px; justify-content: space-between; align-items: center; font-weight: 600; }
+  .mbar a { color: inherit; }
+  .toast { bottom: 72px; }
+}
+</style>
+</head>
+<body>
+<header class="top">
+  <div class="in">
+    <div class="brand"><span class="logo">Đ</span><h1 style="font-size:19px">Đặt Món Chung</h1></div>
+    <div class="me"><label for="whoName">Bạn là</label><input id="whoName" type="text" maxlength="40" placeholder="Nhập tên" autocomplete="nickname"></div>
+  </div>
+</header>
+
+<div class="addbar">
+  <div class="wrap">
+    <form id="addForm">
+      <input id="shopLink" type="url" required placeholder="Dán link quán ShopeeFood, ví dụ https://shopeefood.vn/ho-chi-minh/ten-quan" aria-label="Link quán ShopeeFood">
+      <button class="btn" id="fetchBtn" type="submit">Lấy menu</button>
+    </form>
+    <div class="status" id="addStatus"></div>
+    <div class="fallback" id="fallback" hidden>
+      <b>Cách dự phòng khi máy chủ không lấy được menu</b>
+      <ol>
+        <li><button class="btn small" id="copyCode" type="button">Copy đoạn mã lấy menu</button></li>
+        <li>Mở <a id="openShop" href="https://shopeefood.vn" target="_blank" rel="noopener">trang quán trên ShopeeFood</a> bằng máy tính, bấm F12 (Mac: ⌥⌘J), chọn tab Console, dán đoạn mã rồi bấm Enter. Menu sẽ được copy tự động.</li>
+        <li>Quay lại đây, dán vào ô dưới và bấm Lưu quán.
+          <textarea id="menuJson" placeholder='{"kind":"dat-mon-chung/menu", ...}' style="margin-top:6px"></textarea>
+          <div style="display:flex;gap:10px;align-items:center;margin-top:6px"><button class="btn small" id="saveJson" type="button">Lưu quán</button><span class="status" id="jsonStatus" style="padding:0"></span></div>
+        </li>
+      </ol>
+    </div>
+  </div>
+</div>
+
+<main class="wrap">
+  <nav class="tabs" id="tabs" aria-label="Các quán"></nav>
+  <div id="shopHead"></div>
+  <div class="grid" id="grid">
+    <nav class="catnav" id="catnav" aria-label="Nhóm món"></nav>
+    <section class="menu" aria-label="Menu">
+      <div class="searchbox">
+        <div class="field">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" aria-hidden="true"><circle cx="10.5" cy="10.5" r="6.5"/><path d="m20 20-4.6-4.6"/></svg>
+          <input id="search" type="search" placeholder="Tìm món" aria-label="Tìm món" autocomplete="off">
+        </div>
+        <div class="count" id="count"></div>
+        <div class="catchips" id="catchips"></div>
+      </div>
+      <div id="dishes"><div class="empty"><h2>Đang tải…</h2></div></div>
+    </section>
+    <aside class="board" id="board" aria-label="Đơn chung">
+      <div class="hd"><h2>Đơn chung hôm nay</h2><span class="live off" id="live">Đang kết nối</span></div>
+      <div id="boardBody"></div>
+    </aside>
+  </div>
+</main>
+
+<div class="mbar" id="mbar"><span id="mbarText" class="num">Chưa có đơn</span><a href="#board">Xem đơn chung ↓</a></div>
+<div class="toast" id="toast" role="status" hidden></div>
+
+<dialog id="nameDlg">
+  <form method="dialog" id="nameForm">
+    <h2>Bạn tên gì?</h2>
+    <p class="muted" style="margin:0;font-size:14px">Tên sẽ hiện cạnh món bạn chọn để cả nhóm cùng thấy.</p>
+    <input id="nameInput" type="text" maxlength="40" required placeholder="Ví dụ: Lan" autocomplete="nickname">
+    <div style="display:flex;gap:8px;justify-content:flex-end"><button class="btn ghost small" value="cancel" formnovalidate type="submit">Thôi</button><button class="btn small" value="ok" type="submit">Xong</button></div>
+  </form>
+</dialog>
+
+<script>
+// ---- Fallback: runs on shopeefood.vn (pasted into the browser console) when the server can't reach ShopeeFood. ----
+async function sfGrab(ID, SLUG) {
+  const H = { 'x-foody-client-id': '', 'x-foody-client-type': '1', 'x-foody-app-type': '1004', 'x-foody-client-version': '3.0.0', 'x-foody-api-version': '1', 'x-foody-client-language': 'vi', 'x-foody-access-token': '' };
+  const g = async (p) => { try { const r = await fetch('https://gappapi.deliverynow.vn/api/' + p, { headers: H }); const j = await r.json(); return (j && j.reply) || null; } catch (e) { return null; } };
+  if (!ID && !SLUG && location.hostname.endsWith('shopeefood.vn')) {
+    const m = location.pathname.match(/\/shop\/(\d+)/); if (m) ID = m[1]; else SLUG = location.pathname.replace(/^\/+/, '');
+  }
+  let det = null, did = null, rid = ID || null;
+  if (SLUG) { const r = await g('delivery/get_from_url?url=' + encodeURIComponent(SLUG)); if (r) { did = r.delivery_id || null; rid = r.restaurant_id || rid; } }
+  if (rid && !did) { const r = await g('delivery/get_detail?id_type=1&request_id=' + rid); det = r && r.delivery_detail; if (det) did = det.delivery_id; }
+  if (ID && !det && !did) { const r = await g('delivery/get_detail?id_type=2&request_id=' + ID); det = r && r.delivery_detail; if (det) { did = ID; rid = det.restaurant_id; } }
+  if (did && !det) { const r = await g('delivery/get_detail?id_type=2&request_id=' + did); det = r && r.delivery_detail; }
+  let menu = did ? await g('dish/get_delivery_dishes?id_type=2&request_id=' + did) : null;
+  if (!(menu && menu.menu_infos && menu.menu_infos.length) && rid) menu = await g('dish/get_delivery_dishes?id_type=1&request_id=' + rid);
+  const infos = (menu && menu.menu_infos) || [];
+  if (!infos.length) { console.log('%cKhông lấy được menu. Hãy chạy đoạn mã khi đang mở đúng trang quán trên shopeefood.vn.', 'color:#c62828;font-weight:bold'); return; }
+  const pv = (p) => (p && typeof p.value === 'number') ? p.value : (p ? Number(String(p.text || '').replace(/\D/g, '')) || 0 : 0);
+  const ph = (a) => { const l = (a || []).filter((p) => p && p.value).sort((x, y) => (x.width || 0) - (y.width || 0)); const p = l.find((x) => (x.width || 0) >= 120) || l[l.length - 1]; return p ? p.value : ''; };
+  const out = { kind: 'dat-mon-chung/menu', v: 2, id: String(rid || did || ID || ''), name: (det && det.name) || '', address: (det && det.address) || '', photo: det ? ph(det.photos) : '', url: location.href,
+    categories: infos.map((c) => ({ name: c.dish_type_name || '', dishes: (c.dishs || []).map((d) => ({ id: String(d.id), name: d.name || '', desc: String(d.description || '').slice(0, 200), photo: ph(d.photos),
+      price: pv(d.discount_price) || pv(d.price), oldPrice: d.discount_price ? pv(d.price) : 0, available: d.is_available !== false,
+      options: (d.options || []).map((o) => ({ name: o.name || '', min: (o.option_items && o.option_items.min_select) || 0, max: (o.option_items && o.option_items.max_select) || 0,
+        items: ((o.option_items && o.option_items.items) || []).map((i) => ({ name: i.name || '', price: pv(i.price) })) })) })) })) };
+  const n = out.categories.reduce((s, c) => s + c.dishes.length, 0);
+  const s = JSON.stringify(out);
+  let ok = false;
+  try { copy(s); ok = true; } catch (e) {}
+  if (!ok) { try { await navigator.clipboard.writeText(s); ok = true; } catch (e) {} }
+  if (ok) { console.log('%cĐã copy menu "' + out.name + '" (' + n + ' món). Quay lại trang Đặt Món Chung và dán vào ô ở bước 3.', 'color:#1f8a4c;font-weight:bold;font-size:14px'); return; }
+  const ta = document.createElement('textarea'); ta.value = s;
+  ta.style.cssText = 'position:fixed;inset:20px;z-index:2147483647;width:calc(100% - 40px);height:50%;font:12px monospace;border:3px solid #ee4d2d;background:#fff;color:#000';
+  document.body.appendChild(ta); ta.focus(); ta.select();
+  console.log('%cMenu "' + out.name + '" (' + n + ' món) đã hiện trong ô trên trang và đã được chọn. Bấm Ctrl+C (Mac: ⌘C) để copy.', 'color:#1f8a4c;font-weight:bold;font-size:14px');
+}
+
+// ---- The page itself ----
+const $ = (id) => document.getElementById(id);
+const VND = (n) => Math.round(n || 0).toLocaleString('vi-VN') + 'đ';
+const today = () => new Date().toLocaleDateString('sv-SE', { timeZone: 'Asia/Ho_Chi_Minh' });
+// "Cơm tấm" and "com tam" should match each other.
+const fold = (s) => String(s || '').normalize('NFD').replace(/[̀-ͯ]/g, '').replace(/đ/g, 'd').replace(/Đ/g, 'D').toLowerCase();
+const store = { get(k) { try { return localStorage.getItem(k); } catch (e) { return null; } }, set(k, v) { try { localStorage.setItem(k, v); } catch (e) {} } };
+function el(tag, attrs, ...kids) {
+  const e = document.createElement(tag);
+  for (const [k, v] of Object.entries(attrs || {})) {
+    if (v == null || v === false) continue;
+    if (k === 'class') e.className = v; else if (k === 'text') e.textContent = v;
+    else if (k.startsWith('on')) e.addEventListener(k.slice(2), v); else e.setAttribute(k, v === true ? '' : v);
+  }
+  for (const k of kids.flat()) if (k != null && k !== false) e.append(k.nodeType ? k : document.createTextNode(String(k)));
+  return e;
+}
+let toastT;
+function toast(msg) { const t = $('toast'); t.textContent = msg; t.hidden = false; clearTimeout(toastT); toastT = setTimeout(() => (t.hidden = true), 2600); }
+async function api(method, url, body) {
+  const r = await fetch(url, { method, headers: body ? { 'content-type': 'application/json' } : {}, body: body ? JSON.stringify(body) : undefined });
+  let j = {}; try { j = await r.json(); } catch (e) {}
+  if (!r.ok) { const err = new Error(j.error || 'Có lỗi, thử lại.'); err.data = j; throw err; }
+  return j;
+}
+
+// Each browser gets a random id, so people can change only their own lines.
+let clientId = store.get('dmc.client');
+if (!clientId) { clientId = (crypto.randomUUID ? crypto.randomUUID() : String(Math.random()).slice(2) + Date.now()).replace(/-/g, '').slice(0, 24); store.set('dmc.client', clientId); }
+
+const state = { shops: [], orders: [], current: store.get('dmc.shop'), search: '', openDish: null, confirm: null, loaded: false };
+const rows = new Map(); // dishId -> { row, who, ctl, dish } for the dishes on screen, updated in place when orders change
+
+// ---------- your name ----------
+const myName = () => $('whoName').value.trim();
+$('whoName').value = store.get('dmc.who') || '';
+let renameT;
+$('whoName').addEventListener('input', () => {
+  store.set('dmc.who', myName());
+  clearTimeout(renameT);
+  renameT = setTimeout(() => { if (myName()) api('POST', '/api/rename', { who: myName(), clientId }).catch(() => {}); }, 700);
+});
+// Asks for a name the first time someone picks a dish, then carries on.
+function needName() {
+  if (myName()) return Promise.resolve(true);
+  const dlg = $('nameDlg'); $('nameInput').value = '';
+  return new Promise((resolve) => {
+    dlg.onclose = () => {
+      const v = $('nameInput').value.trim();
+      if (dlg.returnValue === 'ok' && v) { $('whoName').value = v; store.set('dmc.who', v); resolve(true); } else resolve(false);
+    };
+    dlg.showModal(); $('nameInput').focus();
+  });
+}
+
+// ---------- add shop ----------
+function setStatus(id, msg, kind) { const s = $(id); s.textContent = msg || ''; s.className = 'status' + (kind ? ' ' + kind : ''); }
+function shopAdded(shop) {
+  upsertShop(shop); selectShop(shop.key);
+  $('fallback').hidden = true; $('shopLink').value = ''; $('menuJson').value = '';
+  const n = shop.categories.reduce((s, c) => s + c.dishes.length, 0);
+  setStatus('addStatus', 'Đã thêm “' + shop.name + '” với ' + n + ' món. Mọi người mở trang này là thấy ngay.', 'ok'); setStatus('jsonStatus', '');
+}
+$('addForm').addEventListener('submit', async (e) => {
+  e.preventDefault();
+  const url = $('shopLink').value.trim();
+  $('fetchBtn').disabled = true; $('fallback').hidden = true;
+  setStatus('addStatus', 'Đang lấy toàn bộ menu từ ShopeeFood…');
+  try { const { shop } = await api('POST', '/api/shops', { url }); shopAdded(shop); }
+  catch (err) {
+    setStatus('addStatus', err.message, 'err');
+    if (err.data && err.data.fallback) { state.fallback = err.data.fallback; $('openShop').href = url; $('fallback').hidden = false; }
+  } finally { $('fetchBtn').disabled = false; }
+});
+$('copyCode').onclick = async () => {
+  const p = state.fallback || { id: '', slug: '' };
+  const code = '(' + sfGrab.toString() + ')(' + JSON.stringify(p.id) + ',' + JSON.stringify(p.slug) + ');';
+  try { await navigator.clipboard.writeText(code); toast('Đã copy đoạn mã. Mở trang quán và dán vào Console.'); }
+  catch (e) { $('menuJson').value = code; $('menuJson').select(); toast('Không copy tự động được. Đoạn mã đang ở ô bước 3, hãy copy rồi xoá ô đó.'); }
+};
+$('saveJson').onclick = async () => {
+  let m; try { m = JSON.parse($('menuJson').value.trim()); } catch (e) { return setStatus('jsonStatus', 'Nội dung dán vào chưa phải menu.', 'err'); }
+  $('saveJson').disabled = true; setStatus('jsonStatus', 'Đang lưu…');
+  try { const { shop } = await api('POST', '/api/shops', { menu: m, url: $('shopLink').value.trim() }); shopAdded(shop); }
+  catch (err) { setStatus('jsonStatus', err.message, 'err'); }
+  finally { $('saveJson').disabled = false; }
+};
+function upsertShop(shop) { const i = state.shops.findIndex((s) => s.key === shop.key); if (i >= 0) state.shops[i] = shop; else state.shops.push(shop); }
+
+// ---------- shop tabs & header ----------
+function currentShop() { return state.shops.find((s) => s.key === state.current) || state.shops[state.shops.length - 1] || null; }
+function selectShop(key) {
+  state.current = key; store.set('dmc.shop', key);
+  state.openDish = null; state.confirm = null; state.search = ''; $('search').value = '';
+  renderAll(); window.scrollTo({ top: 0 });
+}
+function todayOrders(shopKey) { const d = today(); return state.orders.filter((o) => o.shopId === shopKey && o.day === d); }
+function renderTabs() {
+  const box = $('tabs'); box.replaceChildren();
+  const cur = currentShop();
+  for (const s of state.shops) {
+    const n = todayOrders(s.key).reduce((a, o) => a + o.qty, 0);
+    box.append(el('button', { class: 'tab', type: 'button', 'aria-pressed': String(!!cur && cur.key === s.key), onclick: () => selectShop(s.key) },
+      el('span', { class: 'n', text: s.name }), n ? el('span', { class: 'badge num', text: n }) : null));
+  }
+  box.hidden = state.shops.length < 2;
+}
+function renderShopHead() {
+  const box = $('shopHead'); box.replaceChildren();
+  const shop = currentShop();
+  $('grid').hidden = !shop && state.loaded;
+  if (!shop) {
+    if (state.loaded) box.append(el('div', { class: 'shop empty', style: 'display:block;margin-top:16px' },
+      el('h2', { text: 'Chưa có quán nào' }),
+      el('p', { class: 'muted', style: 'margin:6px auto 0;max-width:460px' }, 'Dán link quán ShopeeFood vào ô phía trên rồi bấm “Lấy menu”. Toàn bộ món sẽ hiện ra, ai mở trang này cũng chọn món được và thấy ngay ai đã chọn gì.')));
+    return;
+  }
+  const tools = el('div', { class: 'meta' });
+  if (shop.url) tools.append(el('a', { href: shop.url, target: '_blank', rel: 'noopener', text: 'Mở trên ShopeeFood ↗' }));
+  if (state.confirm === 'shop') {
+    tools.append(el('span', { text: 'Xoá quán này và các đơn của quán?' }),
+      el('button', { class: 'btn small danger', type: 'button', onclick: deleteShop }, 'Xoá'),
+      el('button', { class: 'btn small ghost', type: 'button', onclick: () => { state.confirm = null; renderShopHead(); } }, 'Thôi'));
+  } else {
+    tools.append(el('button', { class: 'linkbtn', type: 'button', onclick: refreshShop }, 'Cập nhật menu'),
+      el('button', { class: 'linkbtn', type: 'button', onclick: () => { state.confirm = 'shop'; renderShopHead(); } }, 'Xoá quán'));
+  }
+  box.append(el('div', { class: 'shop' },
+    shop.photo ? el('img', { src: shop.photo, alt: '', loading: 'lazy', referrerpolicy: 'no-referrer', onerror: (e) => e.target.removeAttribute('src') }) : null,
+    el('div', { style: 'min-width:0' }, el('h2', { text: shop.name }), shop.address ? el('div', { class: 'muted', style: 'font-size:14px;margin-top:2px', text: shop.address }) : null, tools)));
+}
+async function refreshShop() {
+  const shop = currentShop(); if (!shop) return;
+  toast('Đang cập nhật menu…');
+  try { await api('POST', '/api/shops/' + shop.key + '/refresh'); toast('Đã cập nhật menu.'); } catch (e) { toast(e.message); }
+}
+async function deleteShop() {
+  const shop = currentShop(); if (!shop) return;
+  state.confirm = null;
+  try { await api('DELETE', '/api/shops/' + shop.key); toast('Đã xoá quán.'); } catch (e) { toast(e.message); }
+}
+
+// ---------- menu ----------
+$('search').addEventListener('input', (e) => { state.search = e.target.value; state.openDish = null; renderMenu(); });
+function renderMenu() {
+  const box = $('dishes'); box.replaceChildren(); rows.clear();
+  const nav = $('catnav'); nav.replaceChildren();
+  const chips = $('catchips'); chips.replaceChildren();
+  const shop = currentShop();
+  if (!shop) { $('count').textContent = ''; return; }
+  const q = fold(state.search.trim());
+  const cats = shop.categories.map((c, i) => ({ ...c, i, dishes: c.dishes.filter((d) => !q || fold(d.name).includes(q) || fold(d.desc).includes(q)) })).filter((c) => c.dishes.length);
+  const total = shop.categories.reduce((s, c) => s + c.dishes.length, 0);
+  const shown = cats.reduce((s, c) => s + c.dishes.length, 0);
+  $('count').textContent = q ? shown + ' / ' + total + ' món khớp “' + state.search.trim() + '”' : total + ' món';
+  if (!cats.length) { box.append(el('div', { class: 'empty' }, el('p', { class: 'muted', text: 'Không có món nào khớp “' + state.search.trim() + '”.' }))); return; }
+  for (const c of cats) {
+    const label = c.name + ' (' + c.dishes.length + ')';
+    nav.append(el('a', { href: '#cat-' + c.i, 'data-cat': c.i, text: label }));
+    chips.append(el('a', { href: '#cat-' + c.i, text: c.name }));
+    const sec = el('section', { class: 'cat' }, el('h3', { id: 'cat-' + c.i, 'data-cat': c.i, text: label }));
+    for (const d of c.dishes) sec.append(dishRow(shop, d));
+    box.append(sec);
+  }
+  watchCats();
+}
+function dishRow(shop, d) {
+  const who = el('div', { class: 'who' });
+  const ctl = el('div');
+  const row = el('div', { class: 'dish' + (d.available ? '' : ' off') },
+    d.photo ? el('img', { class: 'ph', src: d.photo, alt: '', loading: 'lazy', referrerpolicy: 'no-referrer', onerror: (e) => e.target.removeAttribute('src') }) : el('div', { class: 'ph' }),
+    el('div', {}, el('div', { class: 'nm', text: d.name }), d.desc ? el('div', { class: 'ds', text: d.desc }) : null,
+      d.available ? null : el('div', { class: 'ds', text: 'Quán đang tạm hết món này' }), who),
+    el('div', { class: 'side' }, el('div', { class: 'price num' }, d.oldPrice ? el('s', { text: VND(d.oldPrice) }) : null, VND(d.price)), ctl));
+  const r = { row, who, ctl, dish: d, shop, sig: null };
+  rows.set(d.id, r);
+  fillRow(r, false);
+  if (state.openDish === d.id) row.append(picker(shop, d));
+  return row;
+}
+// Who picked this dish and how many, plus your own +/− control. Called again whenever orders change.
+function fillRow(r, flash) {
+  const { shop, dish: d } = r;
+  const lines = todayOrders(shop.key).filter((o) => o.dishId === d.id);
+  const sig = JSON.stringify(lines.map((o) => [o.id, o.qty, o.who]));
+  if (sig === r.sig) return;
+  if (flash && r.sig !== null) { r.row.classList.remove('flash'); void r.row.offsetWidth; r.row.classList.add('flash'); setTimeout(() => r.row.classList.remove('flash'), 50); }
+  r.sig = sig;
+  // one chip per person, options merged
+  const per = new Map();
+  for (const o of lines) { const k = o.owner || o.who; const p = per.get(k) || { who: o.who, qty: 0, mine: o.owner === clientId }; p.qty += o.qty; per.set(k, p); }
+  r.who.replaceChildren(...[...per.values()].map((p) => el('span', { class: 'chipwho' + (p.mine ? ' mine' : ''), text: p.who + ' ×' + p.qty })));
+  r.ctl.replaceChildren();
+  if (!d.available) { r.ctl.append(el('button', { class: 'plus', type: 'button', disabled: true, 'aria-label': 'Tạm hết' }, '+')); return; }
+  const plain = !d.options.length && lines.find((o) => o.owner === clientId && !o.opts && !o.note);
+  if (plain) {
+    r.ctl.append(el('div', { class: 'step' },
+      el('button', { type: 'button', 'aria-label': 'Bớt ' + d.name, onclick: () => adjust(shop, d, -1, { orderId: plain.id }) }, '−'),
+      el('b', { class: 'num', text: plain.qty }),
+      el('button', { class: 'add', type: 'button', 'aria-label': 'Thêm ' + d.name, onclick: () => adjust(shop, d, 1, { orderId: plain.id }) }, '+')));
+  } else {
+    const open = state.openDish === d.id;
+    r.ctl.append(el('button', { class: 'plus', type: 'button', 'aria-label': (open ? 'Đóng ' : 'Chọn ') + d.name, 'aria-expanded': d.options.length ? String(open) : null,
+      onclick: () => d.options.length ? togglePicker(d.id) : adjust(shop, d, 1, {}) }, open ? '×' : '+'));
+  }
+}
+function togglePicker(id) {
+  state.openDish = state.openDish === id ? null : id;
+  for (const r of rows.values()) {
+    const p = r.row.querySelector('.picker'); if (p) p.remove();
+    r.sig = null; fillRow(r, false);
+    if (r.dish.id === state.openDish) r.row.append(picker(r.shop, r.dish));
+  }
+}
+async function adjust(shop, d, delta, extra) {
+  if (!(await needName())) return false;
+  try { await api('POST', '/api/orders/adjust', { shopId: shop.key, dishId: d.id, delta, who: myName(), clientId, ...extra }); return true; }
+  catch (e) { toast(e.message); return false; }
+}
+function picker(shop, d) {
+  let qty = 1;
+  const groups = d.options;
+  const optBox = el('div', { style: 'display:grid;gap:10px' });
+  groups.forEach((o, gi) => {
+    const single = o.max === 1;
+    const fs = el('fieldset', {}, el('legend', { text: o.name + (o.min ? ' (bắt buộc)' : ' (tuỳ chọn)') + (o.max > 1 ? ' · tối đa ' + o.max : '') }));
+    const opts = el('div', { class: 'opts' });
+    o.items.forEach((it, ii) => opts.append(el('label', { class: 'opt' }, el('input', { type: single ? 'radio' : 'checkbox', name: 'g' + d.id + '-' + gi, 'data-g': gi, 'data-i': ii }), it.name + (it.price ? ' +' + VND(it.price) : ''))));
+    fs.append(opts); optBox.append(fs);
+  });
+  const note = el('input', { type: 'text', maxlength: '120', placeholder: 'Ghi chú: ít đá, không hành…', style: 'flex:1 1 200px' });
+  const qn = el('b', { class: 'num', text: '1' });
+  const total = el('b', { class: 'num' });
+  const err = el('div', { class: 'err' });
+  const chosen = () => groups.map((o, gi) => [...optBox.querySelectorAll('input[data-g="' + gi + '"]:checked')].map((x) => +x.dataset.i));
+  const upd = () => { const extra = chosen().reduce((s, idx, gi) => s + idx.reduce((a, i) => a + groups[gi].items[i].price, 0), 0); total.textContent = VND((d.price + extra) * qty); };
+  optBox.addEventListener('change', (e) => {
+    const g = groups[+e.target.dataset.g];
+    if (g && g.max > 1 && optBox.querySelectorAll('input[data-g="' + e.target.dataset.g + '"]:checked').length > g.max) e.target.checked = false;
+    upd();
+  });
+  upd();
+  const addBtn = el('button', { class: 'btn small', type: 'button' }, 'Thêm vào đơn chung');
+  addBtn.onclick = async () => {
+    err.textContent = '';
+    const miss = groups.find((o, gi) => o.min && chosen()[gi].length < o.min);
+    if (miss) { err.textContent = 'Hãy chọn “' + miss.name + '”.'; return; }
+    addBtn.disabled = true;
+    if (await adjust(shop, d, qty, { options: chosen(), note: note.value.trim() })) { toast('Đã thêm ' + qty + ' × ' + d.name); togglePicker(d.id); }
+    else addBtn.disabled = false;
+  };
+  return el('div', { class: 'picker' }, groups.length ? optBox : null,
+    el('div', { class: 'line' },
+      el('div', { class: 'step' },
+        el('button', { type: 'button', 'aria-label': 'Bớt', onclick: () => { qty = Math.max(1, qty - 1); qn.textContent = qty; upd(); } }, '−'), qn,
+        el('button', { class: 'add', type: 'button', 'aria-label': 'Thêm', onclick: () => { qty = Math.min(50, qty + 1); qn.textContent = qty; upd(); } }, '+')),
+      note),
+    el('div', { class: 'line' }, total, addBtn), err);
+}
+// Highlights the category you are scrolling through in the left list.
+let catObs;
+function watchCats() {
+  if (catObs) catObs.disconnect();
+  if (!('IntersectionObserver' in window)) return;
+  catObs = new IntersectionObserver((es) => {
+    for (const e of es) if (e.isIntersecting) for (const a of $('catnav').querySelectorAll('a')) a.classList.toggle('on', a.dataset.cat === e.target.dataset.cat);
+  }, { rootMargin: '-80px 0px -70% 0px' });
+  for (const h of $('dishes').querySelectorAll('h3[data-cat]')) catObs.observe(h);
+}
+
+// ---------- board ----------
+function renderBoard() {
+  const body = $('boardBody'); body.replaceChildren();
+  const shop = currentShop();
+  const list = shop ? todayOrders(shop.key).sort((a, b) => a.at - b.at) : [];
+  const sum = list.reduce((s, o) => s + o.price * o.qty, 0);
+  const cnt = list.reduce((s, o) => s + o.qty, 0);
+  $('mbarText').textContent = cnt ? cnt + ' món · ' + VND(sum) : 'Chưa có đơn';
+  if (!shop) return;
+  if (!list.length) { body.append(el('p', { class: 'muted', style: 'font-size:14px;padding:0 14px', text: 'Hôm nay chưa ai chọn món ở quán này. Bấm + cạnh món để chọn, cả nhóm sẽ thấy ngay.' })); return; }
+  const byWho = new Map();
+  for (const o of list) { const k = o.owner || o.who; if (!byWho.has(k)) byWho.set(k, { who: o.who, mine: o.owner === clientId, items: [] }); byWho.get(k).items.push(o); }
+  const people = [...byWho.values()].sort((a, b) => b.mine - a.mine);
+  for (const p of people) {
+    const t = p.items.reduce((s, o) => s + o.price * o.qty, 0);
+    const box = el('div', { class: 'person' + (p.mine ? ' mine' : '') }, el('div', { class: 'pname' }, el('span', { text: p.who + (p.mine ? ' (bạn)' : '') }), el('span', { class: 'num', text: VND(t) })));
+    for (const o of p.items) {
+      const d = { id: o.dishId, name: o.dish };
+      const sub = [o.opts, o.note].filter(Boolean).join(' · ');
+      box.append(el('div', { class: 'pl' },
+        p.mine ? el('div', { class: 'step' },
+          el('button', { type: 'button', 'aria-label': 'Bớt ' + o.dish, onclick: () => adjust(shop, d, -1, { orderId: o.id }) }, '−'),
+          el('b', { class: 'num', text: o.qty }),
+          el('button', { class: 'add', type: 'button', 'aria-label': 'Thêm ' + o.dish, onclick: () => adjust(shop, d, 1, { orderId: o.id }) }, '+'))
+          : el('span', { class: 'q num', text: o.qty + '×' }),
+        el('span', { text: o.dish }), el('span', { class: 'num', text: VND(o.price * o.qty) }),
+        sub ? el('span', { class: 'sub', text: sub }) : null));
+    }
+    body.append(box);
+  }
+  body.append(el('div', { class: 'totals' },
+    el('div', { class: 'big' }, el('span', { text: 'Tổng' }), el('span', { class: 'num', text: VND(sum) })),
+    el('div', { class: 'muted', style: 'font-size:13px', text: people.length + ' người · ' + cnt + ' món · chưa gồm phí ship, giảm giá' })));
+  // Same dish + same options merged, for whoever places the real order on ShopeeFood.
+  const agg = new Map();
+  for (const o of list) { const k = o.dishId + '|' + o.opts + '|' + o.note; const a = agg.get(k) || { ...o, qty: 0 }; a.qty += o.qty; agg.set(k, a); }
+  const text = [...agg.values()].map((a) => a.qty + ' × ' + a.dish + (a.opts ? ' (' + a.opts + ')' : '') + (a.note ? ' — ' + a.note : '')).join('\n');
+  const pre = el('pre', { text });
+  const copyBtn = el('button', { class: 'btn small ghost', type: 'button' }, 'Copy');
+  copyBtn.onclick = async () => { try { await navigator.clipboard.writeText(shop.name + '\n' + text); toast('Đã copy danh sách món'); } catch (e) { const r = document.createRange(); r.selectNodeContents(pre); const s = getSelection(); s.removeAllRanges(); s.addRange(r); toast('Đã chọn sẵn, bấm Ctrl+C để copy'); } };
+  body.append(el('div', { class: 'agg' }, el('div', { style: 'display:flex;justify-content:space-between;align-items:center;gap:8px' }, el('b', { style: 'font-size:14px', text: 'Gom món để đặt trên ShopeeFood' }), copyBtn), pre));
+  const foot = el('div', { class: 'foot' });
+  if (state.confirm !== 'clear') foot.append(el('button', { class: 'linkbtn', type: 'button', onclick: () => { state.confirm = 'clear'; renderBoard(); } }, 'Xoá đơn hôm nay (sau khi đã đặt xong)'));
+  else foot.append(el('span', { text: 'Xoá cả ' + list.length + ' dòng đơn?' }),
+    el('button', { class: 'btn small danger', type: 'button', onclick: async () => { state.confirm = null; try { await api('POST', '/api/orders/clear', { ids: list.map((o) => o.id) }); } catch (e) { toast(e.message); } } }, 'Xoá'),
+    el('button', { class: 'btn small ghost', type: 'button', onclick: () => { state.confirm = null; renderBoard(); } }, 'Thôi'));
+  body.append(foot);
+}
+
+function renderAll() { renderTabs(); renderShopHead(); renderMenu(); renderBoard(); }
+
+// ---------- live data ----------
+let lastShopsJson = '';
+function connect() {
+  const es = new EventSource('/api/events');
+  es.onopen = () => { $('live').textContent = 'Cập nhật trực tiếp'; $('live').classList.remove('off'); };
+  es.addEventListener('shops', (ev) => {
+    const s = JSON.parse(ev.data);
+    state.loaded = true;
+    const sj = JSON.stringify(s.shops);
+    if (sj !== lastShopsJson) {
+      const before = JSON.stringify(currentShop());
+      lastShopsJson = sj; state.shops = s.shops;
+      // Another person adding a shop only adds a tab; the menu you are looking at stays put.
+      if (before === JSON.stringify(currentShop())) { renderTabs(); renderShopHead(); } else { state.openDish = null; renderAll(); }
+    }
+    if (s.freshBoot) restoreShops(); else if (s.shops.length) store.set('dmc.shops', sj);
+  });
+  es.addEventListener('orders', (ev) => {
+    state.orders = JSON.parse(ev.data).orders;
+    renderTabs(); renderBoard();
+    for (const r of rows.values()) fillRow(r, true);
+  });
+  es.onerror = () => { $('live').textContent = 'Mất kết nối, đang thử lại…'; $('live').classList.add('off'); }; // EventSource reconnects on its own
+}
+// Free hosts can wipe the server's data on restart; put back the menus this browser remembers.
+let restored = false;
+async function restoreShops() {
+  if (restored) return; restored = true;
+  let cached = []; try { cached = JSON.parse(store.get('dmc.shops') || '[]'); } catch (e) {}
+  for (const sh of cached) {
+    try { await api('POST', '/api/shops', { menu: { kind: 'dat-mon-chung/menu', id: sh.sourceId, name: sh.name, address: sh.address, photo: sh.photo, categories: sh.categories, url: sh.url } }); } catch (e) {}
+  }
+}
+renderAll();
+connect();
+</script>
+</body>
+</html>
